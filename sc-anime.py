@@ -4,8 +4,8 @@ url_static = "https://campaign-shinycolors.idolmaster.jp/ssr2020/static/media/"
 
 
 def is404(url):
-    n = requests.head(url, allow_redirects=False)
-    if (n.status_code == 404):
+    h = requests.head(url, allow_redirects=False)
+    if (h.status_code == 404):
         return True
     else:
         return False
