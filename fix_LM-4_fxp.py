@@ -11,6 +11,7 @@ unknownBlock2 = bytes.fromhex(
 
 def convertFxp(path):
     newFxpContent = b""
+    fName = os.path.split(f)[1]
     with open(path, 'rb') as fr:
         fxpContent = fr.read()
         pattern = re.compile(br'HaSm(.|\n)*?(\\[\w ]*\\[\w ]*\.aif)')
@@ -31,11 +32,13 @@ def convertFxp(path):
                            fxpContent[pos:pos + m.end()],
                            count=1)
             if count > 0:
-                block = insertUnknownBlock2(block, b'HaPa')
+                if "Reso" in fName:
+                    block = insertUnknownBlock2(block, b'HaSm')
+                else:
+                    block = insertUnknownBlock2(block, b'HaPa')
             newFxpContent += block
             pos += m.end()
             count += 1
-    fName = os.path.split(f)[1]
     with open(fName, 'wb') as fw:
         fw.write(newFxpContent)
         print("success!")
