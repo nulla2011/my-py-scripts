@@ -20,20 +20,21 @@ def convertFxp(path):
         while 1:
             m = pattern.search(fxpContent[pos:])
             if m is None:
-                newFxpContent += insertUnknownBlock2(fxpContent[pos:],
-                                                     b'Harp')
+                newFxpContent += insertUnknownBlock2(fxpContent[pos:], b'Harp')
                 break
             fNameWithParentDir = m.group(2).replace(b"\\", b"\\\\")
             repl = b'HaSm' + unknownBlock1 + bytes(
-                (doubleBackslash(installPath + r"\Processed Studio Kits")),
-                'utf-8') + fNameWithParentDir
+                doubleBackslash(installPath), 'utf-8') + fNameWithParentDir
             block = re.sub(pattern,
                            repl,
                            fxpContent[pos:pos + m.end()],
                            count=1)
             if count > 0:
                 if "Reso" in fName:
-                    block = insertUnknownBlock2(block, b'HaSm')
+                    if findHaPa(block) is True:
+                        block = insertUnknownBlock2(block, b'HaPa')
+                    else:
+                        block = insertUnknownBlock2(block, b'HaSm')
                 else:
                     block = insertUnknownBlock2(block, b'HaPa')
             newFxpContent += block
@@ -54,6 +55,15 @@ def insertUnknownBlock2(bytes, reg):
         return (bytes[:m.start()] + unknownBlock2 + bytes[m.start():])
 
 
+def findHaPa(bytes):
+    pattern = re.compile(b'HaPa')
+    m = pattern.search(bytes)
+    if m is None:
+        return False
+    else:
+        return True
+
+
 def doubleBackslash(str):
     str = str.replace("\\", "\\\\")
     str = str.replace("/", "\\\\")
@@ -62,11 +72,12 @@ def doubleBackslash(str):
 
 if __name__ == "__main__":
     installPath = input(
-        "Input your LM-4 MarkII install path(ends with \"LM-4 MarkII\"):")
+        "Input your \"Processed Studio Kits\" folder path(ends with \"Processed Studio Kits\"):"
+    )
     if installPath.endswith("\\") or installPath.endswith("/"):
-        installPath=installPath[:-1]
+        installPath = installPath[:-1]
     try:
-        fileList = os.listdir(installPath + "\\Processed Studio Kits\\")
+        fileList = os.listdir(installPath)
     except FileNotFoundError:
         print("file not found")
         sys.exit(0)
@@ -77,4 +88,4 @@ if __name__ == "__main__":
     print(f"found {len(fxpList)} fxp files, processing...")
     for f in fxpList:
         print(f"converting {f} ...")
-        convertFxp(installPath + "\\Processed Studio Kits\\" + f)
+        convertFxp(installPath + "\\" + f)
