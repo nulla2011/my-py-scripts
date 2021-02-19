@@ -30,7 +30,7 @@ def convertFxp(path):
                            fxpContent[pos:pos + m.end()],
                            count=1)
             if count > 0:
-                if "Reso" in fName:
+                if "Reso" in fName:  #Reso Kit preset has multiple samples in one pad
                     if findHaPa(block) is True:
                         block = insertUnknownBlock2(block, b'HaPa')
                     else:
@@ -45,19 +45,19 @@ def convertFxp(path):
         print("success!")
 
 
-def insertUnknownBlock2(bytes, reg):
+def insertUnknownBlock2(chunk, reg):
     pattern = re.compile(reg)
-    m = pattern.search(bytes)
+    m = pattern.search(chunk)
     if m is None:
         print("can't find insert position")
-        return bytes
+        return chunk
     else:
-        return (bytes[:m.start()] + unknownBlock2 + bytes[m.start():])
+        return (chunk[:m.start()] + unknownBlock2 + chunk[m.start():])
 
 
-def findHaPa(bytes):
+def findHaPa(chunk):
     pattern = re.compile(b'HaPa')
-    m = pattern.search(bytes)
+    m = pattern.search(chunk)
     if m is None:
         return False
     else:
@@ -72,7 +72,7 @@ def doubleBackslash(str):
 
 if __name__ == "__main__":
     installPath = input(
-        "Input your \"Processed Studio Kits\" folder path(ends with \"Processed Studio Kits\"):"
+        "Input your \"Processed Studio Kits\" folder path (ends with \"Processed Studio Kits\"):\n"
     )
     if installPath.endswith("\\") or installPath.endswith("/"):
         installPath = installPath[:-1]
@@ -85,7 +85,12 @@ if __name__ == "__main__":
     for f in fileList:
         if f.lower().endswith(".fxp"):
             fxpList.append(f)
+    if len(fxpList) == 0:
+        print("can't find fxp files, please check directory")
+        sys.exit(0)
     print(f"found {len(fxpList)} fxp files, processing...")
     for f in fxpList:
         print(f"converting {f} ...")
         convertFxp(installPath + "\\" + f)
+        if f == fxpList[-1]:
+            print("all finished, converted preset files are in current folder")
