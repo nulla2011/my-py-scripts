@@ -3,6 +3,7 @@ import csv
 import time
 
 processNames = ["SwUSB.exe", "runSW.exe", "System", "explorer.exe"]
+interval = 10
 
 
 def getPid(name):
@@ -35,4 +36,4 @@ if __name__ == "__main__":
             print(strTime)
             for i in range(len(line) - 1):
                 print(f"{processNames[i]}: {line[i+1]}")
-        time.sleep(600)
+        time.sleep(60 * interval)
