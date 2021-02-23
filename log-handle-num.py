@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 import psutil
 import csv
 import time
@@ -26,12 +27,13 @@ if __name__ == "__main__":
         pids.append(getPid(process))
     while 1:
         with open("handle-num-log.csv", 'a', newline='') as csvf:
-            lineWriter = csv.writer(csvf, lineterminator='\n')
+            lineWriter = csv.writer(csvf, lineterminator='\r\n')
             lTime = time.localtime()
             strTime = time.strftime("%Y-%m-%d %H:%M:%S", lTime)
             line = [strTime]
             for pid in pids:
-                line.append(getHandleNum(pid))
+                handleNum = "" if pid == -1 else getHandleNum(pid)
+                line.append(handleNum)
             lineWriter.writerow(line)
             print(strTime)
             for i in range(len(line) - 1):
