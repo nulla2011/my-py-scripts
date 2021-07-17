@@ -18,7 +18,11 @@ def getPid(name):
 
 
 def getHandleNum(id):
-    return psutil.Process(id).num_handles()
+    try:
+        num = psutil.Process(id).num_handles()
+    except Exception:
+        num = 0
+    return num
 
 
 if __name__ == "__main__":
@@ -32,7 +36,7 @@ if __name__ == "__main__":
             strTime = time.strftime("%Y-%m-%d %H:%M:%S", lTime)
             line = [strTime]
             for pid in pids:
-                handleNum = "" if pid == -1 else getHandleNum(pid)
+                handleNum = 0 if pid == -1 else getHandleNum(pid)
                 line.append(handleNum)
             lineWriter.writerow(line)
             print(strTime)
