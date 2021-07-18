@@ -7,6 +7,7 @@ import os
 mid = MidiFile(sys.argv[1])
 ticksPerBeat = mid.ticks_per_beat
 emptyTracks = []
+delMidi = True
 converterPath = "E:\EDIROL\SD-20 MIDI File Converter\Midi2Wav.exe"
 if len(mid.tracks) == 0:
     print("No Tracks!")
@@ -65,3 +66,5 @@ for item in items:
     newMid.save(newMidiFileName)
     P = subprocess.Popen(f"\"{converterPath}\" \"{newMidiFileName}\"")
     P.wait()
+    if delMidi:
+        os.remove(newMidiFileName)
