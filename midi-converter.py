@@ -10,7 +10,7 @@ emptyTracks = []
 headerTracks = [mid.tracks[0], mid.tracks[1]]
 converterPath = "E:\EDIROL\SD-20 MIDI File Converter\Midi2Wav.exe"
 
-for i in range(2, len(mid.tracks)):  #前两轨是控制拍号bpm的
+for i in range(2, len(mid.tracks)):  #track 0 is for time signature and track 1 is for tempo (FL Studio)
     track = mid.tracks[i]
     isEmpty = True
     for message in track:
@@ -33,7 +33,7 @@ else:
     for i, n in enumerate(trackNames):
         print(f"{i} ---- {n}")
     input = input(
-        "Input tracks you want to convert(just press enter to convert all tracks): "
+        "Input track numbers you want to convert(just press enter to convert all tracks): "
     )
     if input == "":
         items = list(range(0, len(mid.tracks) - 2))
