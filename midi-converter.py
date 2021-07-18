@@ -50,8 +50,8 @@ for item in items:
     newMid.ticks_per_beat = ticksPerBeat
     newMid.tracks.append(headerTracks[0])
     newMid.tracks.append(headerTracks[1])
-    newMid.tracks.append(mid.tracks[int(n) + 2])
-    newMidiFileName = f"{sys.argv[1][:-4]}_{trackNames[int(n)]}.mid"
+    newMid.tracks.append(mid.tracks[n + 2])
+    newMidiFileName = f"{sys.argv[1][:-4]}_{trackNames[n]}.mid"
     newMid.save(newMidiFileName)
     P = subprocess.Popen(f"{converterPath} \"{newMidiFileName}\"")
     P.wait()
