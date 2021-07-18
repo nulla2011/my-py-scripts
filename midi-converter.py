@@ -7,10 +7,20 @@ import os
 mid = MidiFile(sys.argv[1])
 ticksPerBeat = mid.ticks_per_beat
 emptyTracks = []
-headerTracks = [mid.tracks[0], mid.tracks[1]]
 converterPath = "E:\EDIROL\SD-20 MIDI File Converter\Midi2Wav.exe"
+if len(mid.tracks) == 0:
+    print("No Tracks!")
+    os.system("pause")
+    sys.exit()
+elif len(mid.tracks) == 1:
+    print("All channels was merged to one track, can't convert")
+    os.system("pause")
+    sys.exit()
+else:
+    headerTracks = [mid.tracks[0], mid.tracks[1]]
+    #track 0 is for time signature and track 1 is for tempo (FL Studio export)
 
-for i in range(2, len(mid.tracks)):  #track 0 is for time signature and track 1 is for tempo (FL Studio)
+for i in range(2, len(mid.tracks)):
     track = mid.tracks[i]
     isEmpty = True
     for message in track:
@@ -53,5 +63,5 @@ for item in items:
     newMid.tracks.append(mid.tracks[n + 2])
     newMidiFileName = f"{sys.argv[1][:-4]}_{trackNames[n]}.mid"
     newMid.save(newMidiFileName)
-    P = subprocess.Popen(f"{converterPath} \"{newMidiFileName}\"")
+    P = subprocess.Popen(f"\"{converterPath}\" \"{newMidiFileName}\"")
     P.wait()
